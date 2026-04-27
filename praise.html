@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Good Boy 😏</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Fredoka+One&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink:#f8a4c8; --pink-deep:#e8689a; --pink-soft:#fce4f0;
+    --cream:#fffaf8; --shadow:rgba(240,130,170,0.25); --text:#c0496e; --text-soft:#d4799a;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Nunito',sans-serif;background:linear-gradient(160deg,#fff0f7 0%,#fce4f0 40%,#ffe8f4 100%);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;overflow-x:hidden;cursor:default}
+  .bg-dots{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:radial-gradient(circle,rgba(240,130,170,0.12) 1.5px,transparent 1.5px);background-size:28px 28px}
+  .spark{position:fixed;width:7px;height:7px;border-radius:50%;pointer-events:none;z-index:9999;animation:sparkFly 0.7s ease-out forwards}
+  @keyframes sparkFly{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--tx),var(--ty)) scale(0);opacity:0}}
+  .fheart{position:fixed;pointer-events:none;z-index:50;animation:fUp 2s ease-out forwards}
+  @keyframes fUp{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-200px) scale(0.3);opacity:0}}
+
+  .card{
+    margin: auto;
+    background:rgba(255,255,255,0.85); backdrop-filter:blur(12px);
+    border:2px solid rgba(248,164,200,0.4); border-radius:32px;
+    padding:40px 44px; box-shadow:0 8px 32px var(--shadow),inset 0 1px 0 rgba(255,255,255,0.9);
+    max-width:460px; width:90%; text-align:center; position:relative; overflow:hidden;
+    animation:pageIn 0.5s cubic-bezier(0.23,1,0.32,1) both;
+  }
+  .card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--pink-deep),var(--pink),#ffb6d9,var(--pink-deep));background-size:200% auto;animation:gradShift 3s linear infinite}
+  @keyframes gradShift{to{background-position:200% center}}
+  @keyframes pageIn{from{opacity:0;transform:scale(0.92) translateY(24px)}to{opacity:1;transform:scale(1) translateY(0)}}
+
+  .cat-gif{width:150px;height:150px;object-fit:contain;filter:drop-shadow(0 6px 18px var(--shadow));animation:catBob 2s ease-in-out infinite}
+  @keyframes catBob{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-14px) rotate(2deg)}}
+
+  .title-big{font-family:'Fredoka One',cursive;font-size:clamp(30px,6vw,50px);color:var(--text);text-shadow:2px 2px 0 rgba(248,164,200,0.5);line-height:1.15;margin-top:14px}
+  .subtitle{font-family:'Caveat',cursive;font-size:clamp(20px,4vw,28px);color:var(--text-soft);font-weight:700;margin-top:8px;line-height:1.5}
+  .note{font-size:14px;color:#ccc;margin-top:6px}
+
+  .pop{animation:popIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275) both}
+  .up{animation:slideUp 0.5s ease both}
+  .d1{animation-delay:0.15s}.d2{animation-delay:0.3s}.d3{animation-delay:0.5s}.d4{animation-delay:0.7s}
+  @keyframes popIn{from{transform:scale(0.3);opacity:0}to{transform:scale(1);opacity:1}}
+  @keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+  .btn{
+    font-family:'Fredoka One',cursive; font-size:20px;
+    padding:14px 38px; border:none; border-radius:50px; cursor:pointer;
+    background:linear-gradient(135deg,var(--pink-deep),var(--pink)); color:white;
+    box-shadow:0 5px 0 rgba(0,0,0,0.12); margin-top:24px;
+    transition:transform 0.15s,box-shadow 0.15s; letter-spacing:0.5px;
+  }
+  .btn:hover{transform:translateY(-3px);box-shadow:0 8px 0 rgba(0,0,0,0.12)}
+  .btn:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,0.12)}
+
+  .corner-deco{position:fixed;font-size:22px;pointer-events:none;z-index:2;opacity:0.5;animation:floatDeco 4s ease-in-out infinite}
+  .corner-deco:nth-child(1){top:18px;left:18px;animation-delay:0s}
+  .corner-deco:nth-child(2){top:18px;right:18px;animation-delay:1s}
+  .corner-deco:nth-child(3){bottom:50px;left:18px;animation-delay:2s}
+  .corner-deco:nth-child(4){bottom:50px;right:18px;animation-delay:0.5s}
+  @keyframes floatDeco{0%,100%{transform:translateY(0) rotate(0deg);opacity:0.5}50%{transform:translateY(-8px) rotate(10deg);opacity:0.8}}
+
+  .dots{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:100}
+  .dot{width:8px;height:8px;border-radius:50%;background:rgba(248,164,200,0.4);transition:all 0.35s}
+  .dot.active{background:var(--pink-deep);width:22px;border-radius:4px}
+</style>
+</head>
+<body>
+<div class="bg-dots"></div>
+<div class="corner-deco">🌸</div><div class="corner-deco">💕</div>
+<div class="corner-deco">✨</div><div class="corner-deco">🌸</div>
+
+<div class="dots">
+  <div class="dot"></div><div class="dot"></div><div class="dot active"></div>
+  <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+  <div class="dot"></div><div class="dot"></div>
+</div>
+
+<div class="card">
+  <img src="gifs/Happy Happy Happy Dancing GIF....gif" class="cat-gif pop" alt="happy cat"
+       onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+  <div style="font-size:110px;display:none;animation:catBob 2s ease-in-out infinite">😻</div>
+
+  <div class="title-big pop d1">That's a good boy, Gokul!! 💋</div>
+  <div class="subtitle up d2">Since you said yes…<br>let's go! 😼</div>
+  <div class="note up d3">I have some special things for you…</div>
+
+  <button class="btn up d4" onclick="goNext()">Open your letter 💌</button>
+</div>
+
+<script>
+  const COLORS = ['#f8a4c8','#e8689a','#ffb6d9','#fce4f0','#fff','#ff85c0'];
+  document.addEventListener('click', e => {
+    if(e.target.tagName==='BUTTON') return;
+    for(let i=0;i<14;i++){
+      const s=document.createElement('div'); s.className='spark';
+      const a=(i/14)*Math.PI*2, d=45+Math.random()*60;
+      s.style.cssText=`left:${e.clientX}px;top:${e.clientY}px;background:${COLORS[Math.floor(Math.random()*COLORS.length)]};--tx:${Math.cos(a)*d}px;--ty:${Math.sin(a)*d}px`;
+      document.body.appendChild(s); setTimeout(()=>s.remove(),800);
+    }
+  });
+
+  // Spawn hearts on load
+  const em=['💕','💖','🌸','✨','💗'];
+  for(let i=0;i<8;i++) setTimeout(()=>{
+    const h=document.createElement('div'); h.className='fheart';
+    h.textContent=em[Math.floor(Math.random()*em.length)];
+    h.style.cssText=`left:${10+Math.random()*80}vw;bottom:80px;font-size:${16+Math.random()*18}px`;
+    document.body.appendChild(h); setTimeout(()=>h.remove(),2200);
+  }, i*200+300);
+
+  function goNext(){
+    document.body.style.opacity='0';document.body.style.transition='opacity 0.4s';
+    setTimeout(()=>window.location.href='letter.html',400);
+  }
+
+  document.body.style.opacity='0';document.body.style.transition='opacity 0.5s';
+  window.addEventListener('load',()=>document.body.style.opacity='1');
+</script>
+<script src="audio.js"></script>
+</body>
+</html>

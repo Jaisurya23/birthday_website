@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Make a Wish 🎂</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Caveat:wght@700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink: #f8a4c8;
+    --pink-deep: #e8689a;
+    --pink-soft: #fce4f0;
+    --pink-pale: #fff0f7;
+    --shadow: rgba(240,130,170,0.3);
+    --cream: #fffaf8;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(160deg, #fff0f7 0%, #fce4f0 40%, #ffe8f4 100%);
+    min-height: 100vh; overflow-x: hidden; color: var(--pink-deep);
+    cursor: default;
+  }
+  .bg-dots {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background-image: radial-gradient(circle, rgba(240,130,170,0.12) 1.5px, transparent 1.5px);
+    background-size: 28px 28px;
+  }
+
+  /* Confetti */
+  .confetti-wrap { position: fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:999; overflow:hidden; }
+  .piece { position:absolute; width:9px; height:9px; border-radius:2px; animation: fall linear infinite; }
+  @keyframes fall { 0%{transform:translateY(-20px) rotate(0);opacity:1} 100%{transform:translateY(110vh) rotate(720deg);opacity:0} }
+
+  /* Click sparks */
+  .spark { position:fixed; width:7px; height:7px; border-radius:50%; pointer-events:none; z-index:2000; animation:sparkFly 0.75s ease-out forwards; }
+  @keyframes sparkFly { 0%{transform:translate(0,0) scale(1);opacity:1} 100%{transform:translate(var(--tx),var(--ty)) scale(0);opacity:0} }
+
+  /* Floating hearts */
+  .fheart { position:fixed; pointer-events:none; z-index:50; animation:fUp 2s ease-out forwards; }
+  @keyframes fUp { 0%{transform:translateY(0) scale(1);opacity:1} 100%{transform:translateY(-200px) scale(0.3);opacity:0} }
+
+  /* Hero */
+  .hero { position:relative; z-index:10; text-align:center; padding: 44px 24px 20px; }
+  .badge {
+    display:inline-block;
+    background: rgba(248,164,200,0.18);
+    border: 1.5px solid rgba(248,164,200,0.5);
+    border-radius:100px; padding:7px 20px;
+    font-size:12px; letter-spacing:2px; text-transform:uppercase;
+    color:var(--pink-deep); margin-bottom:18px;
+    animation: fadeDown 0.8s ease both;
+  }
+  .main-title {
+    font-family: 'Pacifico', cursive;
+    font-size: clamp(32px, 7vw, 60px);
+    background: linear-gradient(90deg, var(--pink-deep), #ff85c0, var(--pink-deep));
+    background-size: 200% auto;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    animation: shimmer 3s linear infinite, fadeDown 0.8s 0.2s ease both;
+    line-height:1.2;
+  }
+  @keyframes shimmer { to{background-position:200% center} }
+  .name-line {
+    font-size: clamp(28px,6vw,52px); font-weight:900;
+    color:var(--pink-deep);
+    text-shadow: 0 0 24px rgba(232,104,154,0.4);
+    animation: fadeDown 0.8s 0.35s ease both, glow 2.5s ease-in-out infinite;
+    margin-bottom:18px;
+  }
+  @keyframes glow { 0%,100%{text-shadow:0 0 18px rgba(232,104,154,0.3)} 50%{text-shadow:0 0 40px rgba(232,104,154,0.8),0 0 70px rgba(232,104,154,0.3)} }
+  .emoji-row { font-size:32px; animation:fadeDown 0.8s 0.5s ease both; margin-bottom:28px; display:flex; justify-content:center; gap:12px; }
+  .emoji-row span { display:inline-block; animation:bounce 1s ease-in-out infinite; }
+  .emoji-row span:nth-child(2){animation-delay:.15s}
+  .emoji-row span:nth-child(3){animation-delay:.3s}
+  .emoji-row span:nth-child(4){animation-delay:.45s}
+  .emoji-row span:nth-child(5){animation-delay:.6s}
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  @keyframes fadeDown { from{opacity:0;transform:translateY(-28px)} to{opacity:1;transform:translateY(0)} }
+
+  /* Wish hint */
+  .wish-hint {
+    font-family:'Caveat',cursive; font-size:22px; font-weight:700;
+    color:var(--pink-deep); text-align:center;
+    animation: wishPulse 1.8s ease-in-out infinite;
+    position:relative;z-index:10;
+  }
+  @keyframes wishPulse { 0%,100%{opacity:0.7;transform:scale(1)} 50%{opacity:1;transform:scale(1.04)} }
+
+  /* Cake */
+  .cake-section { position:relative;z-index:10;display:flex;justify-content:center;padding:0 24px 16px; }
+  .cake-wrap { cursor:pointer; transition:transform 0.2s; }
+  .cake-wrap:hover { transform:scale(1.04); }
+  .cake-svg { display:block; filter:drop-shadow(0 16px 36px rgba(232,104,154,0.4)); }
+  .click-hint { text-align:center;font-size:13px;color:rgba(232,104,154,0.6);margin-top:6px;animation:pulse 2s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:.5} 50%{opacity:1} }
+  .flame { animation:flicker 0.32s ease-in-out infinite alternate; transform-origin:center bottom; }
+  @keyframes flicker { from{transform:scaleX(1) scaleY(1);opacity:1} to{transform:scaleX(0.82) scaleY(1.12);opacity:0.85} }
+
+  /* Blown message */
+  #blownMsg {
+    font-family:'Caveat',cursive; font-size:26px; font-weight:700;
+    color:var(--pink-deep); text-align:center; display:none;
+    animation: popIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275) both;
+    position:relative;z-index:10;
+  }
+  @keyframes popIn{from{transform:scale(0.3);opacity:0}to{transform:scale(1);opacity:1}}
+
+  /* Popup */
+  .popup-overlay {
+    display:none; position:fixed; inset:0;
+    background: rgba(255,220,235,0.6); backdrop-filter:blur(6px);
+    z-index:1000; align-items:center; justify-content:center;
+  }
+  .popup-overlay.active { display:flex; }
+  .popup {
+    background: white; border:2.5px solid var(--pink);
+    border-radius:28px; padding:40px 32px; max-width:360px; width:90%;
+    text-align:center; box-shadow:0 16px 48px var(--shadow);
+    animation: popIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275) both;
+  }
+  .popup .icon { font-size:54px; margin-bottom:12px; }
+  .popup h2 { font-size:22px; font-weight:900; color:var(--pink-deep); margin-bottom:10px; }
+  .popup p { color:#a06080; line-height:1.75; font-size:15px; margin-bottom:24px; }
+  .popup-close {
+    background: linear-gradient(135deg, var(--pink-deep), var(--pink)); border:none; color:white;
+    padding:12px 28px; border-radius:100px; cursor:pointer;
+    font-family:'Nunito',sans-serif; font-weight:900; font-size:15px;
+    transition:transform 0.15s,box-shadow 0.15s;
+    box-shadow:0 5px 0 rgba(0,0,0,0.12);
+  }
+  .popup-close:hover{transform:translateY(-3px)}
+
+  /* Nav button */
+  .nav-area { position:relative;z-index:10;text-align:center;padding:0 24px 40px; }
+  .btn {
+    font-family:'Nunito',sans-serif; font-weight:900;
+    background: linear-gradient(135deg, var(--pink-deep), var(--pink));
+    color:white; border:none; border-radius:100px;
+    padding:14px 34px; font-size:16px; cursor:pointer;
+    box-shadow:0 6px 0 rgba(0,0,0,0.12);
+    transition:transform 0.15s, box-shadow 0.15s;
+    animation: fadeDown 1s 1s ease both;
+  }
+  .btn:hover{transform:translateY(-3px);box-shadow:0 9px 0 rgba(0,0,0,0.12)}
+  .btn:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,0.12)}
+</style>
+</head>
+<body>
+<div class="bg-dots"></div>
+<div class="confetti-wrap" id="confetti"></div>
+
+<div class="hero">
+  <div class="badge">✨ A Very Special Day ✨</div>
+  <div class="main-title">Happy Birthday!</div>
+  <div class="name-line">Gokul! 🎂</div>
+  <div class="emoji-row"><span>🎉</span><span>💕</span><span>🎈</span><span>🌸</span><span>🎁</span></div>
+</div>
+
+<div class="wish-hint" id="wishHint">🌟 Make a wish before clicking… 🌟</div>
+
+<div class="cake-section">
+  <div class="cake-wrap" id="cakeWrap" onclick="blowCandles(event)">
+    <svg class="cake-svg" width="270" height="250" viewBox="0 0 270 250">
+      <!-- Shadow -->
+      <ellipse cx="135" cy="234" rx="108" ry="12" fill="rgba(240,130,170,0.15)"/>
+
+      <!-- Bottom tier -->
+      <rect x="22" y="168" width="226" height="64" rx="16" fill="#fad4e8"/>
+      <rect x="22" y="168" width="226" height="14" rx="7" fill="var(--pink)"/>
+      <!-- Hearts on bottom tier -->
+      <text x="68"  y="207" font-size="18" text-anchor="middle">💕</text>
+      <text x="135" y="208" font-size="22" text-anchor="middle">🌸</text>
+      <text x="202" y="207" font-size="18" text-anchor="middle">💕</text>
+      <!-- Drip -->
+      <path d="M40 182 Q48 168 56 182 Q64 168 72 182" stroke="white" stroke-width="2.5" fill="none" opacity="0.7"/>
+      <path d="M100 182 Q108 168 116 182 Q124 168 132 182" stroke="white" stroke-width="2.5" fill="none" opacity="0.7"/>
+      <path d="M160 182 Q168 168 176 182 Q184 168 192 182" stroke="white" stroke-width="2.5" fill="none" opacity="0.7"/>
+      <path d="M200 182 Q208 168 216 182 Q224 168 232 182" stroke="white" stroke-width="2.5" fill="none" opacity="0.7"/>
+
+      <!-- Middle tier -->
+      <rect x="48" y="110" width="174" height="62" rx="14" fill="#fce4f0"/>
+      <rect x="48" y="110" width="174" height="14" rx="7" fill="#f8a4c8"/>
+      <text x="95"  y="145" font-size="16" text-anchor="middle">⭐</text>
+      <text x="135" y="148" font-size="20" text-anchor="middle">💖</text>
+      <text x="175" y="145" font-size="16" text-anchor="middle">⭐</text>
+
+      <!-- Top tier -->
+      <rect x="80" y="60" width="110" height="54" rx="14" fill="#fad4e8"/>
+      <rect x="80" y="60" width="110" height="14" rx="7" fill="var(--pink)"/>
+      <text x="135" y="91" font-size="20" text-anchor="middle" id="cakeEmoji">🎂</text>
+
+      <!-- Candles -->
+      <g id="c1">
+        <rect x="92" y="41" width="10" height="22" rx="3" fill="#e8689a"/>
+        <ellipse class="flame" cx="97" cy="36" rx="6" ry="9" fill="#ffb347" id="f1o"/>
+        <ellipse class="flame" cx="97" cy="38" rx="3" ry="5" fill="#fff5a0" id="f1i"/>
+      </g>
+      <g id="c2">
+        <rect x="130" y="37" width="10" height="26" rx="3" fill="#f8a4c8"/>
+        <ellipse class="flame" cx="135" cy="31" rx="6" ry="9" fill="#ffb347" id="f2o"/>
+        <ellipse class="flame" cx="135" cy="33" rx="3" ry="5" fill="#fff5a0" id="f2i"/>
+      </g>
+      <g id="c3">
+        <rect x="168" y="41" width="10" height="22" rx="3" fill="#e8689a"/>
+        <ellipse class="flame" cx="173" cy="36" rx="6" ry="9" fill="#ffb347" id="f3o"/>
+        <ellipse class="flame" cx="173" cy="38" rx="3" ry="5" fill="#fff5a0" id="f3i"/>
+      </g>
+    </svg>
+    <div class="click-hint">👆 Click to blow the candles!</div>
+  </div>
+</div>
+
+<div id="blownMsg">🎉 Wish sent!! 💕 May it come true!</div>
+
+<div class="nav-area">
+  <button class="btn" id="nextBtn" onclick="goNext()" style="display:none">Next 💝</button>
+</div>
+
+<div class="popup-overlay" id="popup">
+  <div class="popup">
+    <div class="icon">🎂</div>
+    <h2>Your wish is on its way! 💕</h2>
+    <p>Close your eyes, make your wish, and believe with all your heart. Everything you dream of is possible. Happy Birthday, Gokul! 🌸✨</p>
+    <button class="popup-close" onclick="closePopup()">Aww thank you! 🥰</button>
+  </div>
+</div>
+
+<script>
+  const COLORS = ['#f8a4c8','#e8689a','#ffb6d9','#fce4f0','#fff','#ff85c0','#ffe0f0'];
+  let lit = true, firstBlow = true;
+
+  function createConfetti(n=70) {
+    const wrap = document.getElementById('confetti');
+    for(let i=0;i<n;i++) {
+      const c = document.createElement('div');
+      c.className = 'piece';
+      c.style.cssText = `left:${Math.random()*100}%;background:${COLORS[Math.floor(Math.random()*COLORS.length)]};width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${2.5+Math.random()*3}s;animation-delay:${Math.random()*2}s`;
+      wrap.appendChild(c);
+      setTimeout(()=>c.remove(), 7000);
+    }
+  }
+  createConfetti(80);
+
+  function blowCandles(e) {
+    if(!lit) return;
+    lit = false;
+    ['f1o','f1i','f2o','f2i','f3o','f3i'].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.style.display='none';
+    });
+    document.getElementById('cakeEmoji').textContent = '😮💨';
+    document.getElementById('wishHint').style.display = 'none';
+    createSparks(e.clientX, e.clientY);
+    if(firstBlow) {
+      firstBlow = false;
+      setTimeout(() => {
+        document.getElementById('blownMsg').style.display = 'block';
+        createConfetti(90);
+        spawnHearts();
+        setTimeout(() => {
+          document.getElementById('popup').classList.add('active');
+        }, 800);
+      }, 400);
+    }
+  }
+
+  function closePopup() {
+    document.getElementById('popup').classList.remove('active');
+    document.getElementById('nextBtn').style.display = 'inline-block';
+  }
+
+  function createSparks(x, y) {
+    for(let i=0;i<18;i++) {
+      const s = document.createElement('div');
+      s.className='spark';
+      const angle = (i/18)*Math.PI*2, dist = 55+Math.random()*65;
+      s.style.cssText = `left:${x}px;top:${y}px;background:${COLORS[Math.floor(Math.random()*COLORS.length)]};--tx:${Math.cos(angle)*dist}px;--ty:${Math.sin(angle)*dist}px`;
+      document.body.appendChild(s);
+      setTimeout(()=>s.remove(), 900);
+    }
+  }
+
+  function spawnHearts() {
+    const em = ['💕','💖','🌸','✨','💗'];
+    for(let i=0;i<10;i++) setTimeout(()=>{
+      const h = document.createElement('div');
+      h.className='fheart';
+      h.textContent = em[Math.floor(Math.random()*em.length)];
+      h.style.cssText = `left:${10+Math.random()*80}vw;bottom:100px;font-size:${18+Math.random()*18}px`;
+      document.body.appendChild(h);
+      setTimeout(()=>h.remove(),2200);
+    }, i*120);
+  }
+
+  document.addEventListener('click', function(e){
+    if(e.target.tagName==='BUTTON'||e.target.closest('#cakeWrap')||e.target.closest('.popup')) return;
+    createSparks(e.clientX, e.clientY);
+  });
+
+  function goNext() {
+    document.body.style.opacity='0';
+    document.body.style.transition='opacity 0.4s';
+    setTimeout(()=>{ window.location.href='praise.html'; }, 400);
+  }
+
+  document.body.style.opacity='0';
+  document.body.style.transition='opacity 0.5s';
+  window.addEventListener('load',()=>{ document.body.style.opacity='1'; });
+</script>
+<script src="audio.js"></script>
+</body>
+</html>

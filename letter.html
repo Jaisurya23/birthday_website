@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Letter for You 💌</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Fredoka+One&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--pink:#f8a4c8;--pink-deep:#e8689a;--pink-soft:#fce4f0;--cream:#fffaf8;--shadow:rgba(240,130,170,0.25);--text:#c0496e;--text-soft:#d4799a}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Nunito',sans-serif;background:linear-gradient(160deg,#fff0f7 0%,#fce4f0 40%,#ffe8f4 100%);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:24px;overflow-x:hidden;cursor:default}
+  .bg-dots{position:fixed;inset:0;pointer-events:none;z-index:0;background-image:radial-gradient(circle,rgba(240,130,170,0.12) 1.5px,transparent 1.5px);background-size:28px 28px}
+
+  .spark{position:fixed;width:7px;height:7px;border-radius:50%;pointer-events:none;z-index:9999;animation:sparkFly 0.7s ease-out forwards}
+  @keyframes sparkFly{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--tx),var(--ty)) scale(0);opacity:0}}
+  .fheart{position:fixed;pointer-events:none;z-index:50;animation:fUp 2.5s ease-out forwards}
+  @keyframes fUp{0%{transform:translateY(0) scale(1) rotate(0deg);opacity:1}100%{transform:translateY(-230px) scale(0.3) rotate(25deg);opacity:0}}
+
+  /* Envelope */
+  .envelope-area{position:relative;z-index:10;width:100%;max-width:420px;margin:auto}
+
+  .title-top{font-family:'Fredoka One',cursive;font-size:clamp(24px,5vw,38px);color:var(--text);text-shadow:2px 2px 0 rgba(248,164,200,0.4);text-align:center;margin-bottom:16px;animation:pageIn 0.5s cubic-bezier(0.23,1,0.32,1) both}
+  @keyframes pageIn{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+
+  .envelope-wrap{
+    position:relative;cursor:pointer;
+    animation:envIn 0.6s 0.1s cubic-bezier(0.23,1,0.32,1) both;
+  }
+  @keyframes envIn{from{opacity:0;transform:scale(0.85) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+  .envelope-wrap:hover .envelope{transform:translateY(-4px);box-shadow:0 16px 40px var(--shadow)}
+
+  .envelope{
+    width:100%;height:min(240px,56vw);
+    background:white;
+    border-radius:16px;
+    border:2.5px solid rgba(248,164,200,0.5);
+    position:relative; overflow:hidden;
+    box-shadow:0 8px 28px var(--shadow);
+    transition:transform 0.3s,box-shadow 0.3s;
+  }
+  .env-flap{
+    position:absolute;top:-2px;left:-2px;right:-2px;
+    height:52%;
+    background:linear-gradient(135deg,#fce4f0,#f8a4c8);
+    clip-path:polygon(0 0,100% 0,50% 100%);
+    border-radius:16px 16px 0 0;
+    border:2.5px solid rgba(248,164,200,0.4);
+    transition:transform 0.6s ease;
+    transform-origin:top center;
+    z-index:3;
+  }
+  .envelope-wrap.opened .env-flap{transform:rotateX(180deg)}
+  .env-ribbon{position:absolute;top:38%;left:50%;transform:translate(-50%,-50%);font-size:38px;z-index:4}
+  .env-bg-triangle-l{position:absolute;bottom:0;left:0;width:50%;height:100%;background:linear-gradient(135deg,#fce4f0,transparent);clip-path:polygon(0 100%,0 0,100% 100%);z-index:1}
+  .env-bg-triangle-r{position:absolute;bottom:0;right:0;width:50%;height:100%;background:linear-gradient(225deg,#fce4f0,transparent);clip-path:polygon(100% 100%,100% 0,0 100%);z-index:1}
+
+  .env-hint{font-family:'Caveat',cursive;font-size:22px;color:var(--text-soft);font-weight:700;text-align:center;margin-top:10px;animation:hintPulse 2s ease-in-out infinite}
+  @keyframes hintPulse{0%,100%{opacity:0.7}50%{opacity:1}}
+
+  /* Letter card — pops above envelope */
+  .letter-card{
+    display:none;
+    background:white;
+    border:2px solid rgba(248,164,200,0.4);
+    border-radius:20px;
+    padding:28px 28px 24px;
+    margin-top:14px;
+    box-shadow:0 10px 32px var(--shadow);
+    text-align:left;
+    position:relative;
+    overflow:hidden;
+  }
+  .letter-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--pink-deep),var(--pink),#ffb6d9,var(--pink-deep));background-size:200% auto;animation:gradShift 3s linear infinite}
+  @keyframes gradShift{to{background-position:200% center}}
+  .letter-card.show{display:block;animation:letterPop 0.5s cubic-bezier(0.175,0.885,0.32,1.275) both}
+  @keyframes letterPop{from{transform:scale(0.85) translateY(20px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+
+  .letter-bow{font-size:28px;text-align:center;margin-bottom:10px}
+  .letter-text{
+    font-family:'Caveat',cursive;
+    font-size:clamp(17px,3.5vw,22px);
+    color:var(--text); line-height:1.8; font-weight:700;
+    min-height:140px;
+  }
+  .cursor{display:inline-block;width:2px;height:1em;background:var(--pink-deep);margin-left:2px;animation:blink 0.8s step-end infinite;vertical-align:middle}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+  .btn-area{display:none;text-align:center;margin-top:16px}
+  .btn{
+    font-family:'Fredoka One',cursive;font-size:20px;
+    padding:13px 36px;border:none;border-radius:50px;cursor:pointer;
+    background:linear-gradient(135deg,var(--pink-deep),var(--pink));color:white;
+    box-shadow:0 5px 0 rgba(0,0,0,0.12);
+    transition:transform 0.15s,box-shadow 0.15s;
+  }
+  .btn:hover{transform:translateY(-3px);box-shadow:0 8px 0 rgba(0,0,0,0.12)}
+  .btn:active{transform:translateY(2px);box-shadow:0 2px 0 rgba(0,0,0,0.12)}
+
+  .corner-deco{position:fixed;font-size:22px;pointer-events:none;z-index:2;opacity:0.5;animation:floatDeco 4s ease-in-out infinite}
+  .corner-deco:nth-child(1){top:18px;left:18px}.corner-deco:nth-child(2){top:18px;right:18px;animation-delay:1s}
+  .corner-deco:nth-child(3){bottom:50px;left:18px;animation-delay:2s}.corner-deco:nth-child(4){bottom:50px;right:18px;animation-delay:.5s}
+  @keyframes floatDeco{0%,100%{transform:translateY(0) rotate(0);opacity:.5}50%{transform:translateY(-8px) rotate(10deg);opacity:.8}}
+
+  .dots{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:100}
+  .dot{width:8px;height:8px;border-radius:50%;background:rgba(248,164,200,0.4);transition:all .35s}
+  .dot.active{background:var(--pink-deep);width:22px;border-radius:4px}
+</style>
+</head>
+<body>
+<div class="bg-dots"></div>
+<div class="corner-deco">🌸</div><div class="corner-deco">💕</div>
+<div class="corner-deco">✨</div><div class="corner-deco">🌸</div>
+
+<div class="dots">
+  <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+  <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+  <div class="dot"></div><div class="dot"></div>
+</div>
+
+<div class="envelope-area">
+  <div class="title-top">A little letter for you 💌</div>
+
+  <div class="envelope-wrap" id="envWrap" onclick="openEnvelope()">
+    <div class="envelope">
+      <div class="env-flap" id="envFlap"></div>
+      <div class="env-ribbon">🎀</div>
+      <div class="env-bg-triangle-l"></div>
+      <div class="env-bg-triangle-r"></div>
+    </div>
+  </div>
+
+  <div class="env-hint" id="envHint">Tap to open 👆</div>
+
+  <!-- Letter appears here -->
+  <div class="letter-card" id="letterCard">
+    <div class="letter-bow">🎀</div>
+    <div class="letter-text" id="letterText"><span class="cursor" id="cursor"></span></div>
+  </div>
+
+  <div class="btn-area" id="btnArea">
+    <button class="btn" onclick="goNext()">See your photos 📸</button>
+  </div>
+</div>
+
+<script>
+  const LETTER = `Dear Gokul,\n\nYou are seen, you are heard,\nand you are loved — no matter what. 💕\n\nIf you ever feel unloved, remember\nmy love for you is boundless and endless.\n\nYou make every day brighter just\nby being you. 🌸\n\nHappy Birthday, you beautiful soul! 🌟`;
+
+  const COLORS = ['#f8a4c8','#e8689a','#ffb6d9','#fce4f0','#fff','#ff85c0'];
+  let opened = false;
+
+  function openEnvelope() {
+    if(opened) return;
+    opened = true;
+    document.getElementById('envWrap').classList.add('opened');
+    document.getElementById('envHint').style.display = 'none';
+    spawnHearts();
+    setTimeout(() => {
+      const card = document.getElementById('letterCard');
+      card.classList.add('show');
+      typeWriter();
+    }, 700);
+  }
+
+  function typeWriter() {
+    const el = document.getElementById('letterText');
+    const cursor = document.getElementById('cursor');
+    let i = 0;
+    const full = LETTER;
+
+    function type() {
+      if(i < full.length) {
+        const ch = full[i];
+        const span = document.createElement('span');
+        span.textContent = ch === '\n' ? '' : ch;
+        if(ch === '\n') span.innerHTML = '<br>';
+        el.insertBefore(span, cursor);
+        i++;
+        const delay = ch === '\n' ? 120 : ch === ',' || ch === '.' ? 80 : 28 + Math.random()*20;
+        setTimeout(type, delay);
+        // spawn hearts occasionally
+        if(i % 45 === 0) spawnHearts(3);
+      } else {
+        cursor.style.display = 'none';
+        document.getElementById('btnArea').style.display = 'block';
+        spawnHearts(10);
+      }
+    }
+    setTimeout(type, 300);
+  }
+
+  // click sparks
+  document.addEventListener('click', e => {
+    if(e.target.tagName==='BUTTON') return;
+    for(let i=0;i<12;i++){
+      const s=document.createElement('div'); s.className='spark';
+      const a=(i/12)*Math.PI*2, d=35+Math.random()*55;
+      s.style.cssText=`left:${e.clientX}px;top:${e.clientY}px;background:${COLORS[Math.floor(Math.random()*COLORS.length)]};--tx:${Math.cos(a)*d}px;--ty:${Math.sin(a)*d}px`;
+      document.body.appendChild(s); setTimeout(()=>s.remove(),800);
+    }
+  });
+
+  function spawnHearts(n=8) {
+    const em=['💕','💖','🌸','✨','💗','💓'];
+    for(let i=0;i<n;i++) setTimeout(()=>{
+      const h=document.createElement('div'); h.className='fheart';
+      h.textContent=em[Math.floor(Math.random()*em.length)];
+      h.style.cssText=`left:${10+Math.random()*80}vw;bottom:80px;font-size:${16+Math.random()*16}px;animation-delay:${Math.random()*0.2}s`;
+      document.body.appendChild(h); setTimeout(()=>h.remove(),2500);
+    }, i*120);
+  }
+
+  function goNext() {
+    document.body.style.opacity='0'; document.body.style.transition='opacity 0.4s';
+    setTimeout(()=>window.location.href='memories.html', 400);
+  }
+
+  document.body.style.opacity='0'; document.body.style.transition='opacity 0.5s';
+  window.addEventListener('load',()=>document.body.style.opacity='1');
+</script>
+<script src="audio.js"></script>
+</body>
+</html>

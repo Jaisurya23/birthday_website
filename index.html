@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Something for you... 🎀</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Fredoka+One&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink: #f8a4c8;
+    --pink-soft: #fce4f0;
+    --pink-pale: #fff0f7;
+    --pink-deep: #e8689a;
+    --white: #ffffff;
+    --cream: #fffaf8;
+    --text: #c0496e;
+    --text-soft: #d4799a;
+    --shadow: rgba(240, 130, 170, 0.25);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--cream);
+    min-height: 100vh;
+    overflow-x: hidden;
+    cursor: default;
+    position: relative;
+  }
+
+  /* ── BACKGROUND ── */
+  .bg-wrap {
+    position: fixed; inset: 0; z-index: 0;
+    background: linear-gradient(160deg, #fff0f7 0%, #fce4f0 40%, #ffe8f4 70%, #fff5fa 100%);
+  }
+  .bg-wrap::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(circle at 15% 20%, rgba(248,164,200,0.18) 0%, transparent 55%),
+      radial-gradient(circle at 85% 75%, rgba(232,104,154,0.12) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(255,200,220,0.1) 0%, transparent 60%);
+  }
+
+  /* Soft dot pattern */
+  .bg-dots {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image: radial-gradient(circle, rgba(240,130,170,0.12) 1.5px, transparent 1.5px);
+    background-size: 30px 30px;
+  }
+
+  /* Click sparkles */
+  .spark {
+    position: fixed; pointer-events: none; z-index: 9999;
+    width: 8px; height: 8px; border-radius: 50%;
+    animation: sparkFly 0.7s ease-out forwards;
+  }
+  @keyframes sparkFly {
+    0%   { transform: translate(0,0) scale(1); opacity: 1; }
+    100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+  }
+
+  /* ── PAGES ── */
+  .page {
+    position: fixed; inset: 0; z-index: 10;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Fix for clipping on small screens */
+    padding: 40px 24px;
+    text-align: center;
+    overflow-y: auto;
+  }
+  .page.active { display: flex; animation: pageIn 0.45s cubic-bezier(0.23,1,0.32,1) both; }
+  .page.out    { animation: pageOut 0.3s ease forwards !important; pointer-events: none; }
+
+  @keyframes pageIn  { from { opacity:0; transform:scale(0.95) translateY(20px); } to { opacity:1; transform:scale(1) translateY(0); } }
+  @keyframes pageOut { from { opacity:1; } to { opacity:0; transform:scale(0.95); } }
+
+  /* ── CARD WRAPPER ── */
+  .card {
+    margin: auto;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(12px);
+    border: 2px solid rgba(248,164,200,0.4);
+    border-radius: 32px;
+    padding: 36px 40px;
+    box-shadow:
+      0 8px 32px var(--shadow),
+      inset 0 1px 0 rgba(255,255,255,0.9);
+    max-width: 480px;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, var(--pink-deep), var(--pink), #ffb6d9, var(--pink-deep));
+    background-size: 200% auto;
+    animation: gradientShift 3s linear infinite;
+  }
+  @keyframes gradientShift { to { background-position: 200% center; } }
+
+  /* ── GIF CONTAINER ── */
+  .cat-gif {
+    width: 130px; height: 130px;
+    object-fit: contain;
+    filter: drop-shadow(0 6px 18px var(--shadow));
+    animation: catBob 2.2s ease-in-out infinite;
+  }
+  @keyframes catBob {
+    0%,100% { transform: translateY(0) rotate(-2deg); }
+    50%      { transform: translateY(-12px) rotate(2deg); }
+  }
+  .cat-gif.angry { animation: catShake 0.35s ease-in-out infinite; }
+  @keyframes catShake { 0%,100%{transform:rotate(-6deg)} 50%{transform:rotate(6deg)} }
+  .cat-gif.big { width: 160px; height: 160px; }
+  .cat-gif.huge { width: 190px; height: 190px; }
+
+  /* ── TYPOGRAPHY ── */
+  .title-big {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(44px, 9vw, 78px);
+    color: var(--text);
+    text-shadow: 3px 3px 0 rgba(248,164,200,0.5);
+    letter-spacing: 2px;
+    line-height: 1.1;
+  }
+  .title-med {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(26px, 5vw, 44px);
+    color: var(--text);
+    text-shadow: 2px 2px 0 rgba(248,164,200,0.4);
+    line-height: 1.2;
+  }
+  .subtitle {
+    font-family: 'Caveat', cursive;
+    font-size: clamp(20px, 4vw, 30px);
+    color: var(--text-soft);
+    font-weight: 700;
+    line-height: 1.5;
+  }
+  .note {
+    font-family: 'Nunito', sans-serif;
+    font-size: 15px;
+    color: #ccc;
+    margin-top: 4px;
+  }
+
+  /* ── BUTTONS ── */
+  .btn-row { display: flex; gap: 14px; margin-top: 24px; flex-wrap: wrap; justify-content: center; align-items: center; }
+
+  .btn {
+    font-family: 'Fredoka One', cursive;
+    font-size: 20px;
+    padding: 12px 34px;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 5px 0 rgba(0,0,0,0.12);
+    position: relative;
+    overflow: hidden;
+  }
+  .btn::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: rgba(255,255,255,0.2);
+    opacity: 0; transition: opacity 0.2s;
+  }
+  .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 0 rgba(0,0,0,0.12); }
+  .btn:hover::after { opacity: 1; }
+  .btn:active { transform: translateY(2px); box-shadow: 0 2px 0 rgba(0,0,0,0.12); }
+
+  .btn-yes { background: linear-gradient(135deg, var(--pink-deep), var(--pink)); color: white; }
+  .btn-no  { background: white; color: var(--text); border: 2.5px solid var(--pink); }
+  .btn-next { background: linear-gradient(135deg, var(--pink-deep), var(--pink)); color: white; font-size: 18px; }
+
+  /* ── NO BUTTON ARC ── */
+  #noBtn {
+    transition: font-size 0.3s, padding 0.3s, transform 0.15s, box-shadow 0.15s, opacity 0.3s;
+  }
+  #yesBtn {
+    transition: font-size 0.4s, padding 0.4s, transform 0.15s, box-shadow 0.15s;
+  }
+
+  /* ── FLOATING HEARTS ── */
+  .float-heart {
+    position: fixed; pointer-events: none; z-index: 50;
+    animation: floatUp 2.2s ease-out forwards;
+  }
+  @keyframes floatUp {
+    0%   { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+    100% { transform: translateY(-220px) rotate(20deg) scale(0.3); opacity: 0; }
+  }
+
+  /* ── PROGRESS DOTS ── */
+  .dots {
+    position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 8px; z-index: 100;
+  }
+  .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(248,164,200,0.4);
+    transition: all 0.35s;
+  }
+  .dot.active { background: var(--pink-deep); width: 22px; border-radius: 4px; }
+
+  /* ── CORNER DECORATIONS ── */
+  .corner-deco {
+    position: fixed; font-size: 22px; pointer-events: none; z-index: 2;
+    opacity: 0.5; animation: floatDeco 4s ease-in-out infinite;
+  }
+  .corner-deco:nth-child(1) { top: 18px; left: 18px; animation-delay: 0s; }
+  .corner-deco:nth-child(2) { top: 18px; right: 18px; animation-delay: 1s; }
+  .corner-deco:nth-child(3) { bottom: 50px; left: 18px; animation-delay: 2s; }
+  .corner-deco:nth-child(4) { bottom: 50px; right: 18px; animation-delay: 0.5s; }
+  @keyframes floatDeco {
+    0%,100%{transform:translateY(0) rotate(0deg); opacity:0.5}
+    50%{transform:translateY(-8px) rotate(10deg); opacity:0.8}
+  }
+
+  /* ── ANIMATIONS ── */
+  .pop   { animation: popIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275) both; }
+  .up    { animation: slideUp 0.5s ease both; }
+  .fade  { animation: fadeIn 0.6s ease both; }
+  .d1 { animation-delay: 0.1s; }
+  .d2 { animation-delay: 0.25s; }
+  .d3 { animation-delay: 0.4s; }
+  .d4 { animation-delay: 0.55s; }
+  .d5 { animation-delay: 0.7s; }
+
+  @keyframes popIn   { from{transform:scale(0.3);opacity:0} to{transform:scale(1);opacity:1} }
+  @keyframes slideUp { from{transform:translateY(30px);opacity:0} to{transform:translateY(0);opacity:1} }
+  @keyframes fadeIn  { from{opacity:0} to{opacity:1} }
+
+  /* ── GAP HELPERS ── */
+  .gap4  { margin-top: 4px; }
+  .gap8  { margin-top: 8px; }
+  .gap12 { margin-top: 12px; }
+  .gap16 { margin-top: 16px; }
+  .gap24 { margin-top: 24px; }
+</style>
+</head>
+<body>
+
+<!-- Background -->
+<div class="bg-wrap"></div>
+<div class="bg-dots"></div>
+
+
+
+<!-- Progress dots -->
+<div class="dots" id="dots"></div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 1 — ENTRY: Hey!!
+══════════════════════════════════════════ -->
+<div class="page active" id="p1">
+  <div class="card">
+    <img src="gifs/hi.gif" class="cat-gif pop" alt="cat waving">
+
+    <div class="title-big pop d1">HEY!!</div>
+    <div class="subtitle up d2">I made something for you… 👀</div>
+    <div class="note up d3">Do you want to see? </div>
+
+    <div class="btn-row d4 up">
+      <button class="btn btn-yes" id="yesBtn" onclick="handleYes()">Yes 🥰</button>
+      <button class="btn btn-no"  id="noBtn"  onclick="handleNo()">No 🙄</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PAGE 2 — TRANSITION after YES
+══════════════════════════════════════════ -->
+<div class="page" id="p2">
+  <div class="card">
+    <img src="gifs/Happy.gif" class="cat-gif big pop" alt="happy cat">
+
+    <div class="title-med pop d1">Good choice…</div>
+    <div class="subtitle up d2">I knew you would say yes</div>
+    <div class="note up d3" style="color:var(--text-soft); font-size:17px;">You're gonna love this 💕</div>
+
+    <div class="btn-row up d4">
+      <button class="btn btn-next" onclick="goPage('cake.html')">Let's go! 🎂</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── NO button arc state ──
+  let noCount = 0;
+
+  function handleNo() {
+    noCount++;
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn  = document.getElementById('noBtn');
+
+    if (noCount === 1) {
+      // Swap to angry cat + grow yes
+      document.querySelector('#p1 .cat-gif').src = 'gifs/anger.gif';
+      document.querySelector('#p1 .cat-gif').classList.add('angry');
+      document.querySelector('#p1 .title-big').textContent = 'WHY?!';
+      document.querySelector('#p1 .subtitle').textContent = 'Why would you say no 😤';
+      document.querySelector('#p1 .note').textContent = 'Try again…';
+      yesBtn.style.fontSize  = '24px';
+      yesBtn.style.padding   = '15px 44px';
+      noBtn.style.fontSize   = '16px';
+      noBtn.style.padding    = '10px 24px';
+      spawnHearts(['😾','💢','😤']);
+    } else if (noCount === 2) {
+      // Sad cat
+      document.querySelector('#p1 .cat-gif').src = 'gifs/cat_gun.gif';
+      document.querySelector('#p1 .cat-gif').classList.remove('angry');
+      document.querySelector('#p1 .title-big').textContent = 'Really?';
+      document.querySelector('#p1 .subtitle').textContent = 'That hurts… please say yes 🥺';
+      document.querySelector('#p1 .note').textContent = 'I made this just for you…';
+      yesBtn.style.fontSize  = '30px';
+      yesBtn.style.padding   = '18px 54px';
+      noBtn.style.fontSize   = '13px';
+      noBtn.style.padding    = '8px 18px';
+      spawnHearts(['🥺','💔','😢']);
+    } else {
+      // Trap mode — no disappears, yes HUGE
+      noBtn.style.opacity = '0';
+      noBtn.style.pointerEvents = 'none';
+      document.querySelector('#p1 .cat-gif').src = 'gifs/tease.gif';
+      document.querySelector('#p1 .cat-gif').classList.remove('angry');
+      document.querySelector('#p1 .title-big').textContent = 'No escape';
+      document.querySelector('#p1 .subtitle').textContent = 'You have no other option 😏';
+      document.querySelector('#p1 .note').textContent = 'Just press it.';
+      yesBtn.style.fontSize  = '36px';
+      yesBtn.style.padding   = '22px 64px';
+      spawnHearts(['😈','😏','💅']);
+    }
+  }
+
+  function handleYes() {
+    spawnHearts(['💕','🎉','✨','💖','🌸']);
+    switchPage('p1', 'p2');
+  }
+
+  // ── Page system ──
+  const PAGE_ORDER = ['p1','p2']; // only entry pages here; rest are separate HTML files
+
+  function switchPage(fromId, toId) {
+    const from = document.getElementById(fromId);
+    from.classList.add('out');
+    setTimeout(() => {
+      from.classList.remove('active','out');
+      const to = document.getElementById(toId);
+      to.classList.add('active');
+      spawnHearts(['💕','✨','🌸']);
+    }, 300);
+  }
+
+  function goPage(url) {
+    document.body.style.opacity = '0';
+    document.body.style.transition = 'opacity 0.4s';
+    setTimeout(() => { window.location.href = url; }, 400);
+  }
+
+  // ── Sparkles on click ──
+  const COLORS = ['#f8a4c8','#e8689a','#ffb6d9','#fce4f0','#ffffff','#ff85c0'];
+  document.addEventListener('click', function(e) {
+    if (e.target.tagName === 'BUTTON') return;
+    createSparks(e.clientX, e.clientY);
+  });
+
+  function createSparks(x, y, count=14) {
+    for (let i = 0; i < count; i++) {
+      const s = document.createElement('div');
+      s.className = 'spark';
+      const angle = (i / count) * Math.PI * 2;
+      const dist  = 40 + Math.random() * 60;
+      s.style.cssText = `left:${x}px;top:${y}px;background:${COLORS[Math.floor(Math.random()*COLORS.length)]};width:${4+Math.random()*6}px;height:${4+Math.random()*6}px;--tx:${Math.cos(angle)*dist}px;--ty:${Math.sin(angle)*dist}px`;
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 800);
+    }
+  }
+
+  function spawnHearts(emojis = ['💕','💖','🌸','✨']) {
+    for (let i = 0; i < 8; i++) {
+      setTimeout(() => {
+        const h = document.createElement('div');
+        h.className = 'float-heart';
+        h.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        h.style.cssText = `left:${10 + Math.random()*80}vw;bottom:80px;font-size:${16+Math.random()*20}px;animation-delay:${Math.random()*0.3}s`;
+        document.body.appendChild(h);
+        setTimeout(() => h.remove(), 2400);
+      }, i * 100);
+    }
+  }
+
+  // Progress dot (just 1 for entry)
+  const dot = document.createElement('div');
+  dot.className = 'dot active';
+  document.getElementById('dots').appendChild(dot);
+
+  // Fade in on load
+  document.body.style.opacity = '0';
+  document.body.style.transition = 'opacity 0.5s';
+  window.addEventListener('load', () => {
+    document.body.style.opacity = '1';
+  });
+</script>
+<script src="audio.js"></script>
+</body>
+</html>
