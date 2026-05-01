@@ -1,4 +1,4 @@
-# 🎀 Birthday Gift Website for Gokul
+# 🎀 Birthday Gift Website for anjleeey
 
 ## 📁 Folder Structure
 
@@ -6,7 +6,7 @@
 birthday_project/
 ├── index.html        ← START HERE (Entry page with cat + yes/no game)
 ├── cake.html         ← Cake page with candles to blow
-├── praise.html       ← "That's a good boy" page
+├── praise.html       ← "That's a good girl" page
 ├── letter.html       ← Love letter with typing animation
 ├── memories.html     ← Memory wall + video
 
@@ -57,7 +57,7 @@ index.html  →  cake.html  →  praise.html  →  letter.html
 - **Letter**: Typing animation — words appear one by one like a real letter
 - **Memory Wall**: Photos auto-load from `photos/` folder + video player
 - **Gift**: 3-second suspense countdown with progress ring before opening
-- **Final**: "Gokul!" types out letter by letter before confetti explosion
+- **Final**: "anjleeey!" types out letter by letter before confetti explosion
 
 ## 💡 Tips
 
